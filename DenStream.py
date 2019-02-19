@@ -38,7 +38,7 @@ class DenStream():
         ### Check input type: epsilon ### 
         if isinstance(epsilon, int) or isinstance(epsilon, float):
             self.epsilon = epsilon
-        elif isinstance(epsilon, str) or isinstance(epsilon, unicode):
+        elif isinstance(epsilon, str):
             if epsilon == 'auto':
                 self.epsilon = 'auto'
         else:
@@ -47,7 +47,7 @@ class DenStream():
         ### Check input type: mu ###
         if isinstance(mu, int) or isinstance(mu, float):
             self.mu = mu
-        elif isinstance(mu, str) or isinstance(mu, unicode):
+        elif isinstance(mu, str):
             if mu == 'auto':
                 self.mu = 'auto'
         else:
