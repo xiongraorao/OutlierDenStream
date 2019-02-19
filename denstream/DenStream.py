@@ -15,9 +15,9 @@ import numpy as np
 
 from sklearn.cluster import DBSCAN
 
-from sample import Sample
-from cluster import Cluster
-from microCluster import MicroCluster
+from denstream.sample import Sample
+from denstream.cluster import Cluster
+from denstream.microCluster import MicroCluster
     
 class DenStream():
     
