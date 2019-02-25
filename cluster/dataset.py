@@ -35,8 +35,10 @@ def load_feature(path):
     '''
     X = []
     lables = []
+    img_paths = []
     for line in open(path):
         data = json.loads(line)
         X.append(data['feature'])
         lables.append(data['label'])
-    return X, lables
+        img_paths.append(data['path'].strip())
+    return X, lables, img_paths

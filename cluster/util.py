@@ -34,3 +34,18 @@ def cluster_eval_withoutgt(X, labels):
     '''
     SC = metrics.silhouette_score(X, labels, metric='cosine')
     return SC
+
+def trans_sqlinsert(x):
+    '''
+    把二维的list, tuple 转换成sql中的values 后面的东西
+    :param x:
+    :return:
+    '''
+    if x is None or len(x) == 0:
+        return None
+    elif len(x) == 1:
+        x = tuple(map(lambda a:tuple(a), x))
+        return str(tuple(x))[1:-2]
+    else:
+        x = tuple(map(lambda a:tuple(a), x))
+        return str(tuple(x))[1:-1]
