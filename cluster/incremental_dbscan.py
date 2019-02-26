@@ -137,5 +137,3 @@ def dbscan(X, eps, min_pts):
 X = seeds()
 
 dbscan(X, 0.5, min_pts=5)
-
-from sklearn.cluster import DBSCAN
