@@ -8,7 +8,7 @@ Created on Thu Jun 29 17:48:21 2017
 
 class Sample():
     
-    def __init__(self, value, timestamp):
+    def __init__(self, value, timestamp=0):
         self.value = value
         self.timestamp = 0
         self.realTimestamp = timestamp
