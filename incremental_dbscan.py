@@ -217,7 +217,7 @@ class IDBSCAN():
                 # update new_cluster label
                 partial_labels[update_indices] = old_label
 
-            existed_label_len = self.labels_.shape[0]
+            existed_label_len = np.max(self.labels_)
             for i, new in enumerate(new_indices):
                 partial_labels[new] = i + existed_label_len
 
@@ -257,13 +257,14 @@ def load_feature(path):
 
 def load_data(db):
     if db == 'blob':
-        noisy_blob = datasets.make_blobs(n_samples=1000, random_state=8, centers=3)
+        noisy_blob = datasets.make_blobs(n_samples=1000, random_state=8, centers=4)
         X = noisy_blob[0]
         y = noisy_blob[1]
         X = StandardScaler().fit_transform(X)
         return X,y
     elif db == 'lfw':
-        X, y, _ = load_feature('C:\\Users\\xiongraorao\\Desktop\\lfw_feature.txt')
+        #X, y, _ = load_feature('C:\\Users\\xiongraorao\\Desktop\\lfw_feature.txt')
+        X, y, _ = load_feature('C:\\Users\\raorao\\Desktop\\lfw_feature.txt')
         return X,y
 
 def idbscan_test():
@@ -273,7 +274,7 @@ def idbscan_test():
     plt.figure(figsize=(10, 10))
 
     # 传统的dbscan
-    dbscan = DBSCAN(min_samples=1, eps=0.5, n_jobs=-1)
+    dbscan = DBSCAN(min_samples=10, eps=0.4, n_jobs=-1, metric='euclidean')
     y1 = dbscan.fit_predict(X)
 
     colors = np.array(list(islice(cycle(['#377eb8', '#ff7f00', '#4daf4a',
@@ -282,14 +283,15 @@ def idbscan_test():
                                   int(max(y) + 1))))
 
     # idbscan
-    idbscan = IDBSCAN(min_samples=1, eps=0.5,n_jobs=-1)
+    idbscan = IDBSCAN(min_samples=10, eps=0.4,n_jobs=-1, metric='euclidean')
     XX = []
     # for i in range(10):
     #     XX.append(X[i*100: (i+1)*100])
     # for x in XX:
     #     idbscan.partial_fit(x)
     idbscan.partial_fit(X[:500])
-    idbscan.partial_fit(X[500:])
+    idbscan.partial_fit(X[500:700])
+    idbscan.partial_fit(X[700:1000])
     y2 = idbscan.labels_
     print('n cluster: %d'%(len(set(y2))))
 
@@ -300,31 +302,37 @@ def idbscan_test():
     unsupervise_score = cluster_eval_withoutgt(X, y1)
     print('unsupervised evaluate score: ', unsupervise_score)
 
-    # plt.subplot(2, 2, 1)
-    # plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y])
-    # plt.xlim(-2.5, 2.5)
-    # plt.ylim(-2.5, 2.5)
-    # plt.xticks(())
-    # plt.yticks(())
-    # plt.title('ground truth')
-    #
-    # plt.subplot(2, 2, 2)
-    # plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y1])
-    # plt.xlim(-2.5, 2.5)
-    # plt.ylim(-2.5, 2.5)
-    # plt.xticks(())
-    # plt.yticks(())
-    # plt.title('dbscan result')
-    #
-    # plt.subplot(2, 2, 3)
-    # plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y2])
-    # plt.xlim(-2.5, 2.5)
-    # plt.ylim(-2.5, 2.5)
-    # plt.xticks(())
-    # plt.yticks(())
-    # plt.title('idbscan result')
-    #
-    # plt.show()
+    score = cluster_eval(y, y2)
+    print('evaluate score: ', score)
+
+    unsupervise_score = cluster_eval_withoutgt(X, y2)
+    print('unsupervised evaluate score: ', unsupervise_score)
+
+    plt.subplot(2, 2, 1)
+    plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y])
+    plt.xlim(-2.5, 2.5)
+    plt.ylim(-2.5, 2.5)
+    plt.xticks(())
+    plt.yticks(())
+    plt.title('ground truth')
+
+    plt.subplot(2, 2, 2)
+    plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y1])
+    plt.xlim(-2.5, 2.5)
+    plt.ylim(-2.5, 2.5)
+    plt.xticks(())
+    plt.yticks(())
+    plt.title('dbscan result')
+
+    plt.subplot(2, 2, 3)
+    plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y2])
+    plt.xlim(-2.5, 2.5)
+    plt.ylim(-2.5, 2.5)
+    plt.xticks(())
+    plt.yticks(())
+    plt.title('idbscan result')
+
+    plt.show()
 
 
 idbscan_test()
